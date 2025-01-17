@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Simulation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        #controls {
+            margin: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #portfolio {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+
+        canvas {
+            margin-top: 20px;
+        }
+
+        input {
+            margin: 5px;
+            padding: 5px;
+            width: 80px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Simulation App</h1>
+    <div id="controls">
+        <input type="number" id="quantity" placeholder="Quantity" min="1" value="1">
+        <button onclick="buyStock()">Buy</button>
+        <button onclick="sellStock()">Sell</button>
+        <button onclick="toggleSimulation()" id="pauseBtn">Pause</button>
+    </div>
+
+    <div id="portfolio">
+        Cash: <span id="cash">$10000</span><br>
+        Stocks Owned: <span id="stocks">0</span><br>
+        Portfolio Value: <span id="portfolioValue">$10000</span>
+    </div>
+
+    <canvas id="stockChart" width="600" height="400"></canvas>
+
+    <script>
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        const stockPrices = [100];
+        const cashSpan = document.getElementById('cash');
+        const stocksSpan = document.getElementById('stocks');
+        const portfolioValueSpan = document.getElementById('portfolioValue');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const quantityInput = document.getElementById('quantity');
+
+        let cash = 10000;
+        let stocks = 0;
+        let isRunning = true;
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 1 }, (_, i) => i + 1),
+                datasets: [{
+                    label: 'Stock Price',
+                    data: stockPrices,
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { display: true },
+                    y: { display: true }
+                }
+            }
+        });
+
+        function updatePortfolio() {
+            const currentPrice = stockPrices[stockPrices.length - 1];
+            portfolioValueSpan.textContent = `$${(cash + stocks * currentPrice).toFixed(2)}`;
+            cashSpan.textContent = `$${cash.toFixed(2)}`;
+            stocksSpan.textContent = stocks;
+        }
+
+        function generatePrice() {
+            if (!isRunning) return;
+            const lastPrice = stockPrices[stockPrices.length - 1];
+            const change = lastPrice * (Math.random() * 0.13 - 0.05);
+            const newPrice = Math.max(1, lastPrice + change);
+            stockPrices.push(newPrice);
+            if (stockPrices.length > 50) stockPrices.shift();
+            chart.data.labels = Array.from({ length: stockPrices.length }, (_, i) => i + 1);
+            chart.data.datasets[0].data = stockPrices;
+            chart.update();
+            updatePortfolio();
+        }
+
+        function buyStock() {
+            const currentPrice = stockPrices[stockPrices.length - 1];
+            const quantity = parseInt(quantityInput.value) || 1;
+            const totalCost = quantity * currentPrice;
+
+            if (totalCost <= cash) {
+                stocks += quantity;
+                cash -= totalCost;
+                updatePortfolio();
+            } else {
+                alert('Not enough cash to buy stocks!');
+            }
+        }
+
+        function sellStock() {
+            const currentPrice = stockPrices[stockPrices.length - 1];
+            const quantity = parseInt(quantityInput.value) || 1;
+
+            if (quantity <= stocks) {
+                stocks -= quantity;
+                cash += quantity * currentPrice;
+                updatePortfolio();
+            } else {
+                alert('Not enough stocks to sell!');
+            }
+        }
+
+        function toggleSimulation() {
+            isRunning = !isRunning;
+            pauseBtn.textContent = isRunning ? 'Pause' : 'Resume';
+        }
+
+        setInterval(generatePrice, 10000);
+    </script>
+</body>
+</html>
