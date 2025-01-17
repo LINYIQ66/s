@@ -112,7 +112,7 @@
         function generatePrice() {
             if (!isRunning) return;
             const lastPrice = stockPrices[stockPrices.length - 1];
-            const change = lastPrice * (Math.random() * 0.11 - 0.05);
+            const change = lastPrice * (Math.random() * 0.1 - 0.05);
             const newPrice = Math.max(1, lastPrice + change);
             stockPrices.push(newPrice);
             if (stockPrices.length > 50) stockPrices.shift();
