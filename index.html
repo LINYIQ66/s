@@ -61,9 +61,9 @@
     </div>
 
     <div id="portfolio">
-        Cash: <span id="cash">$10000</span><br>
+        Cash: <span id="cash">$1000000</span><br>
         Stocks Owned: <span id="stocks">0</span><br>
-        Portfolio Value: <span id="portfolioValue">$10000</span>
+        Portfolio Value: <span id="portfolioValue">$1000000</span>
     </div>
 
     <canvas id="stockChart" width="600" height="400"></canvas>
@@ -77,7 +77,7 @@
         const pauseBtn = document.getElementById('pauseBtn');
         const quantityInput = document.getElementById('quantity');
 
-        let cash = 10000;
+        let cash = 1000000;
         let stocks = 0;
         let isRunning = true;
 
@@ -154,7 +154,7 @@
             pauseBtn.textContent = isRunning ? 'Pause' : 'Resume';
         }
 
-        setInterval(generatePrice, 10000);
+        setInterval(generatePrice, 5000);
     </script>
 </body>
 </html>
