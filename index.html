@@ -52,7 +52,7 @@
     </style>
 </head>
 <body>
-    <h1>Stock Trading App</h1>
+    <h1>Official Trump Meme</h1>
     <div id="controls">
         <input type="number" id="quantity" placeholder="Quantity" min="1" value="1">
         <button onclick="buyStock()">Buy</button>
@@ -70,7 +70,7 @@
 
     <script>
         const ctx = document.getElementById('stockChart').getContext('2d');
-        const stockPrices = [100];
+        const stockPrices = [0.2];
         const cashSpan = document.getElementById('cash');
         const stocksSpan = document.getElementById('stocks');
         const portfolioValueSpan = document.getElementById('portfolioValue');
@@ -112,7 +112,7 @@
         function generatePrice() {
             if (!isRunning) return;
             const lastPrice = stockPrices[stockPrices.length - 1];
-            const change = lastPrice * (Math.random() * 0.1 - 0.05);
+            const change = lastPrice * (Math.random() * 0.11 - 0.05);
             const newPrice = Math.max(1, lastPrice + change);
             stockPrices.push(newPrice);
             if (stockPrices.length > 50) stockPrices.shift();
@@ -132,7 +132,7 @@
                 cash -= totalCost;
                 updatePortfolio();
             } else {
-                alert('Not enough cash to buy stocks!');
+                alert('Not enough cash to buy $TRUMP!');
             }
         }
 
@@ -145,7 +145,7 @@
                 cash += quantity * currentPrice;
                 updatePortfolio();
             } else {
-                alert('Not enough stocks to sell!');
+                alert('Not enough $TRUMP to sell!');
             }
         }
 
